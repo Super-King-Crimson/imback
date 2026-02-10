@@ -45,7 +45,7 @@ export abstract class MovementState extends State {
         return undefined;
     }
 
-    public override OnStepped(_delta: number): Maybe<State> {
+    public override OnHeartbeat(_delta: number): Maybe<State> {
         return undefined;
     }
 }

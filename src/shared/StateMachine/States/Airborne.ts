@@ -42,7 +42,7 @@ export class Airborne extends MovementState {
 
             if (!this._jumpingState) {
                 if (state.name === EMovementState.Jumping) {
-                    this._jumpingState = state;
+                    this._jumpingState = state as Jumping;
                     print("Linked jump state: ");
                     print(state);
                 }
@@ -90,14 +90,14 @@ export class Airborne extends MovementState {
     public override OnInputBegan(input: InputObject): Maybe<MovementState> {
         if (input.KeyCode === Enum.KeyCode.Space) {
             if (this._coyoteTimer <= this.coyoteTime) {
-                this.humanoid.ChangeState(Enum.HumanoidStateType.Jumping);
                 if (!this._jumpingState) error("forgot to link");
+
                 return this._jumpingState;
             }
         }
     }
 
-    public override OnStepped(_delta: number): Maybe<MovementState> {
+    public override OnHeartbeat(_delta: number): Maybe<MovementState> {
         this._coyoteTimer += _delta;
 
         if (this.humanoid.GetState() !== Enum.HumanoidStateType.Freefall) {

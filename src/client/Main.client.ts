@@ -1,4 +1,9 @@
-import { UserInputService, Players, RunService } from "@rbxts/services";
+import {
+    UserInputService,
+    Players,
+    RunService,
+    ContextActionService,
+} from "@rbxts/services";
 import { StateMachine } from "shared/StateMachine/StateMachine";
 import { EMovementState } from "shared/StateMachine/State";
 
@@ -7,6 +12,8 @@ let stateMachine: Maybe<StateMachine>;
 
 lp.CharacterAdded.Connect((character: Model) => {
     print("what is happening");
+
+    ContextActionService.UnbindAction("jumpAction");
 
     const hum = character.WaitForChild("Humanoid") as Humanoid;
     const hrp = character.WaitForChild("HumanoidRootPart") as Part;
@@ -31,7 +38,7 @@ lp.CharacterAdded.Connect((character: Model) => {
     );
 
     const hb = RunService.Heartbeat.Connect((delta) =>
-        stateMachine?.OnStepped(delta),
+        stateMachine?.OnHeartbeat(delta),
     );
     const ib = UserInputService.InputBegan.Connect((input) =>
         stateMachine?.OnInputBegan(input),

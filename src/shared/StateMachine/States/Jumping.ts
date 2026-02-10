@@ -4,8 +4,11 @@ import { MovementState } from "./MovementState";
 export class Jumping extends MovementState {
     private _airborneState: Maybe<MovementState>;
 
+    public jumpPower = 0;
+    public randomBoost = 100;
+
     public prevState: Maybe<MovementState>;
-    public prevJumpPower: number = 0;
+    private _frameDelay: boolean = false;
 
     constructor(
         player: Player,
@@ -38,14 +41,13 @@ export class Jumping extends MovementState {
 
     public override Enter(prevState: MovementState): Maybe<MovementState> {
         super.Enter(prevState);
+        print(this.humanoid.GetState());
+        this._frameDelay = false;
 
-        this.prevJumpPower = this.humanoid.JumpPower;
-        if (math.random() > 0.5) {
-            this.humanoid.JumpPower += 20;
-            print("you win the lottery!");
-        }
+        this.jumpPower = this.humanoid.JumpPower;
+        this.humanoid.JumpPower = this.jumpPower + this.randomBoost;
 
-        this.prevState = prevState as MovementState;
+        this.prevState = prevState;
 
         return undefined;
     }
@@ -53,10 +55,16 @@ export class Jumping extends MovementState {
     public override Exit(_nextState: MovementState): void {
         super.Exit(_nextState);
 
-        this.humanoid.JumpPower = this.prevJumpPower;
+        this.humanoid.JumpPower = this.jumpPower;
     }
 
-    public override OnStepped(_delta: number): Maybe<MovementState> {
+    public override OnHeartbeat(_delta: number): Maybe<MovementState> {
+        if (!this._frameDelay) {
+            this._frameDelay = true;
+            this.humanoid.ChangeState(Enum.HumanoidStateType.Jumping);
+            return;
+        }
+
         return this._airborneState;
     }
 }

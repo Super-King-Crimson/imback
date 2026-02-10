@@ -75,11 +75,11 @@ export class StateMachine {
         }
     }
 
-    public OnStepped(delta: number) {
+    public OnHeartbeat(delta: number) {
         if (this.state === undefined)
             error("Cannot use state machine without setting initial state");
 
-        let newState = this.state.OnStepped(delta);
+        let newState = this.state.OnHeartbeat(delta);
         if (newState) this.ChangeState(newState);
     }
 

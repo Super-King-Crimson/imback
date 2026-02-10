@@ -21,5 +21,5 @@ export abstract class State {
     public abstract Exit(nextState: State): void;
     public abstract OnInputBegan(input: InputObject): Maybe<State>;
     public abstract OnInputEnded(input: InputObject): Maybe<State>;
-    public abstract OnStepped(delta: number): Maybe<State>;
+    public abstract OnHeartbeat(delta: number): Maybe<State>;
 }

@@ -1,3 +1,4 @@
+import { UserInputService } from "@rbxts/services";
 import { EMovementState } from "../State";
 import { MovementState } from "./MovementState";
 
@@ -100,15 +101,15 @@ export class Running extends MovementState {
         return undefined;
     }
 
-    public override OnStepped(delta: number): Maybe<MovementState> {
-        super.OnStepped(delta);
+    public override OnHeartbeat(delta: number): Maybe<MovementState> {
+        super.OnHeartbeat(delta);
 
         if (this.humanoid.GetState() === Enum.HumanoidStateType.Freefall) {
             if (!this._airborneState) error("Forgot to link");
             return this._airborneState;
         }
 
-        if (this.humanoid.GetState() === Enum.HumanoidStateType.Jumping) {
+        if (UserInputService.IsKeyDown(Enum.KeyCode.Space)) {
             if (!this._jumpingState) error("Forgot to link");
             return this._jumpingState;
         }
